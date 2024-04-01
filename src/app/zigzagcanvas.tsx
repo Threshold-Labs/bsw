@@ -3,28 +3,57 @@
 import React, { useEffect, useState } from "react";
 import Triangle from "./triangle";
 
-const ZigzagCanvas = ({ triangleBase, triangleHeight, rows, cols, colors }) => {
+interface ZigzagCanvasProps {
+  triangleBase: number;
+  triangleHeight: number;
+  rows: number;
+  cols: number;
+  colors: string[];
+}
+
+interface CanvasProps {
+  width: number;
+  height: number;
+}
+
+// make an interface for the graphic, which will contain the canvas and simple array of the colors, triangle by triangle
+//
+
+interface Graphic {
+  canvas: CanvasProps;
+  user_id: string;
+  date: string;
+  matrix: string[];
+}
+
+const ZigzagCanvas = ({
+  triangleBase,
+  triangleHeight,
+  rows,
+  cols,
+  colors,
+}: ZigzagCanvasProps) => {
   // const triangles = [];
   const [triangles, setTriangles] = useState([]); // Use React state to manage the color
   const correctedHeight = (Math.sqrt(3) / 2) * triangleBase;
 
   const verticalSpacing = correctedHeight + 10;
-  const randomize = () => {
-    console.log("randomize triangles");
-    for (let i = 0; i < triangles.length; i++) {
-      const color = colors[Math.floor(Math.random() * colors.length)];
-      triangles[i] = (
-        <Triangle
-          key={triangles[i].key}
-          base={triangleBase}
-          height={triangles[i].props.height}
-          initialColor={color}
-          possibleColors={colors}
-          style={triangles[i].props.style}
-        />
-      );
-    }
-  };
+  // const randomize = () => {
+  //   console.log("randomize triangles");
+  //   for (let i = 0; i < triangles.length; i++) {
+  //     const color = colors[Math.floor(Math.random() * colors.length)];
+  //     triangles[i] = (
+  //       <Triangle
+  //         key={triangles[i].key}
+  //         base={triangleBase}
+  //         height={triangles[i].props.height}
+  //         initialColor={color}
+  //         possibleColors={colors}
+  //         style={triangles[i].props.style}
+  //       />
+  //     );
+  //   }
+  // };
 
   useEffect(() => {
     const temp_triangles = [];
@@ -63,26 +92,30 @@ const ZigzagCanvas = ({ triangleBase, triangleHeight, rows, cols, colors }) => {
     }
   }, [triangles]);
 
-  const canvasWidth = cols * triangleBase + triangleBase / 2;
+  const canvasWidth = (cols / 2) * triangleBase + (cols / 2) * 2 + 2; // Adjust the canvasWidth to account for the spacing between triangles
+  const horizontalSpacing = triangleBase / 2 - 10; // Assuming 10 is the spacing between triangles
+  const adjustedCanvasWidth = canvasWidth + cols * horizontalSpacing;
   const canvasHeight = rows * verticalSpacing;
 
   return (
-    <div>
-      Randomize Button
+    <div className="flex flex-col">
+      {/* Randomize Button
       <button
         className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
         // onClick={randomize()}
       >
         Randomize
-      </button>
+      </button> */}
       <div
         style={{
           position: "relative",
           width: canvasWidth,
           height: canvasHeight,
+          margin: "0 auto",
         }}
       >
         {triangles}
+        {/* Add functionality to select a subset of triangles */}
       </div>
     </div>
   );
